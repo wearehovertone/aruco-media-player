@@ -8,11 +8,13 @@
 
 100% JavaScript (see details bellow):
 
-- [Webcam live demo!](https://damianofalcioni.github.io/js-aruco2/samples/getusermedia/getusermedia.html)
+- [Webcam live demo! (ARUCO Dictionary)](https://damianofalcioni.github.io/js-aruco2/samples/getusermedia/getusermedia_ARUCO.html)
 
-- [Visual debugging live demo!](https://damianofalcioni.github.io/js-aruco2/samples/debug/debug.html)
+- [Webcam live demo! (ARUCO_MIP_36h12 Dictionary)](https://damianofalcioni.github.io/js-aruco2/samples/getusermedia/getusermedia_ARUCO_MIP_36h12.html)
 
-- [3D Earth!](https://damianofalcioni.github.io/js-aruco2/samples/debug-posit/debug-posit.html)
+- [Visual debugging live demo (ARUCO_MIP_36h12 Dictionary)!](https://damianofalcioni.github.io/js-aruco2/samples/debug/debug.html)
+
+- [3D Earth (ARUCO_MIP_36h12 Dictionary)!](https://damianofalcioni.github.io/js-aruco2/samples/debug-posit/debug-posit.html)
 
 ## Markers 
 

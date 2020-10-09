@@ -9,17 +9,13 @@
   <script type="text/javascript" src="../../src/aruco.js"></script> 
 
   <script>
-    var camera, canvas, context, imageData, pixels, detector;
-    var debugImage, warpImage, homographyImage;
-
+    var video, canvas, context, imageData, detector;
+  
     function onLoad(){
-      camera = document.getElementById("video");
+      video = document.getElementById("video");
       canvas = document.getElementById("canvas");
       context = canvas.getContext("2d");
-      
-      camera.width = 320;
-      camera.height = 240;
-      
+    
       canvas.width = parseInt(canvas.style.width);
       canvas.height = parseInt(canvas.style.height);
       
@@ -55,17 +51,11 @@
         }
       );
         
-      imageData = context.getImageData(0, 0, camera.width, camera.height);
-      pixels = [];
-      detector = new AR.Detector();
-      
-      debugImage = context.createImageData(camera.width, camera.height);
-      warpImage = context.createImageData(49, 49);
-      homographyImage = new CV.Image();
-      
+      detector = new AR.Detector('ARUCO');
+
       requestAnimationFrame(tick);
     }
-
+    
     function tick(){
       requestAnimationFrame(tick);
       
@@ -73,69 +63,16 @@
         snapshot();
 
         var markers = detector.detect(imageData);
-        drawDebug();
         drawCorners(markers);
         drawId(markers);
       }
     }
 
     function snapshot(){
-      context.drawImage(video, 0, 0, camera.width, camera.height);
-      imageData = context.getImageData(0, 0, camera.width, camera.height);
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     }
           
-    function drawDebug(){
-      var width = camera.width, height = camera.height;
-      
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      
-      context.putImageData(imageData, 0, 0);
-      context.putImageData( createImage(detector.grey, debugImage), width, 0);
-      context.putImageData( createImage(detector.thres, debugImage), width * 2, 0);
-      
-      drawContours(detector.contours, 0, height, width, height, function(hole) {return hole? "magenta": "blue";});
-      drawContours(detector.polys, width, height, width, height, function() {return "green";} );
-      drawContours(detector.candidates, width * 2, height, width, height, function() {return "red";} );
-      
-      drawWarps(detector.grey, detector.candidates, 0, height * 2 + 20);
-    }
-    
-    function drawContours(contours, x, y, width, height, fn){
-      var i = contours.length, j, contour, point;
-      
-      while(i --){
-        contour = contours[i];
-
-        context.strokeStyle = fn(contour.hole);
-        context.beginPath();
-
-        for (j = 0; j < contour.length; ++ j){
-          point = contour[j];
-          this.context.moveTo(x + point.x, y + point.y);
-          point = contour[(j + 1) % contour.length];
-          this.context.lineTo(x + point.x, y + point.y);
-        }
-        
-        context.stroke();
-        context.closePath();
-      }
-    }
-    
-    function drawWarps(imageSrc, contours, x, y){
-      var i = contours.length, j, contour;
-      
-      var offset = ( canvas.width - ( (warpImage.width + 10) * contours.length) ) / 2
-      while(i --){
-        contour = contours[i];
-        
-        CV.warp(imageSrc, homographyImage, contour, warpImage.width);
-        this.context.putImageData( createImage(homographyImage, warpImage), offset + i * (warpImage.width + 10), y);
-        
-        CV.threshold(homographyImage, homographyImage, CV.otsu(homographyImage) );
-        this.context.putImageData( createImage(homographyImage, warpImage), offset + i * (warpImage.width + 10), y + 60);
-      }
-    }
-    
     function drawCorners(markers){
       var corners, corner, i, j;
     
@@ -185,19 +122,7 @@
       }
     }
 
-    function createImage(src, dst){
-      var i = src.data.length, j = (i * 4) + 3;
-      
-      while(i --){
-        dst.data[j -= 4] = 255;
-        dst.data[j - 1] = dst.data[j - 2] = dst.data[j - 3] = src.data[i];
-      }
-      
-      return dst;
-    };
-
-  window.onload = onLoad;
-
+    window.onload = onLoad;
   </script>
 
 </head>
@@ -206,8 +131,8 @@
 
   <center>
     <div style="margin: 10px;"><strong>-= Augmented Reality Marker Detector =-</strong></div>
-    <video id="video" autoplay="true" style="width:320px; height:240px; display:none;"></video>
-    <canvas id="canvas" style="width:960px; height:620px;"></canvas>
+    <video id="video" autoplay="true" style="display:none;"></video>
+    <canvas id="canvas" style="width:640px; height:480px;"></canvas>
     <div style="margin: 15px;"><strong>Powered by <a href="https://damianofalcioni.github.io/js-aruco2/">js-aruco2</a></strong></div>
   </center>
 
