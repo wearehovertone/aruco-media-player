@@ -1,62 +1,39 @@
-**js-aruco** is a port to JavaScript of the ArUco library.
+# JS-ARUCO2
+
+**js-aruco2** is a fork of [js-aruco](https://github.com/jcmellado/js-aruco) that support also the ARUCO_MIP_36h12 dictionary and adaptable to use any other ArUco or custom dictionary.
 
 [ArUco](http://www.uco.es/investiga/grupos/ava/node/26) is a minimal library for Augmented Reality applications based on OpenCv.
 
-### Demos ###
+## Demos
 
 100% JavaScript (see details bellow):
 
-- [Webcam live demo!](https://jcmellado.github.io/js-aruco/getusermedia/getusermedia.html)
+- [Webcam live demo!](https://damianofalcioni.github.io/js-aruco2/samples/getusermedia/getusermedia.html)
 
-3D Pose Estimation:
+- [Visual debugging live demo!](https://damianofalcioni.github.io/js-aruco2/samples/debug/debug.html)
 
-- [3D Earth!](https://jcmellado.github.io/js-aruco/debug-posit/debug-posit.html)
+- [3D Earth!](https://damianofalcioni.github.io/js-aruco2/samples/debug-posit/debug-posit.html)
 
-Visual Debugging:
+## Markers 
 
-- [Debug session jam!](https://jcmellado.github.io/js-aruco/debug/debug.html)
+A square grid with an external unused black border. Internal cells contains id information.
 
-Flash camera access (see details bellow):
+The markes are recognized using the dictionary specified. The library currently support the following dictionaries:
+- ARUCO: 6x6 Marker with 25 bit information, minimum hamming distance between any two codes = 1 and 1024 codes.
+- [ARUCO_MIP_36h12](https://sourceforge.net/projects/aruco/files/aruco_mip_36h12_dict.zip/download): 8x8 Marker with 36 bit information, minimum hamming distance between any two codes = 12 and 250 codes.
 
-- [Webcam live demo!](https://jcmellado.github.io/js-aruco/webcam/webcam.html)
+The library can be anyway easily adapted to work with any other ArUco dictionary for square markers. 
 
-### Videos ###
-
-Webcam video adquisition:
-
-[![js-aruco](http://img.youtube.com/vi/_wzPupbww4I/0.jpg)](http://www.youtube.com/watch?v=_wzPupbww4I)
-
-3D Pose estimation:
-
-[![js-aruco](http://img.youtube.com/vi/9WD4wR3_-JM/0.jpg)](http://www.youtube.com/watch?v=9WD4wR3_-JM)
-
-Visual Debugging:
-
-[![js-aruco](http://img.youtube.com/vi/xvTMRdgySUQ/0.jpg)](http://www.youtube.com/watch?v=xvTMRdgySUQ)
-
-### Markers ###
-
-A 7x7 grid with an external unused black border. Internal 5x5 cells contains id information.
-
-Each row must follow any of the following patterns:
-
-`white - black - black - black - black`
-
-`white - black - white - white - white`
-
-`black - white - black - black - white`
-
-`black - white - white - white - black`
-
-Example:
-
-![Marker](http://www.inmensia.com/files/pictures/external/1001.png)
-
-### Usage ###
-Create an `AR.Detector` object:
+## Usage
+Create an `AR.Detector` object using default ARUCO_MIP_36h12 dictionary:
 
 ```
 var detector = new AR.Detector();
+```
+Create an `AR.Detector` object using a specific dictionary (Currently available dictionaries are 'ARUCO' and 'ARUCO_MIP_36h12'):
+
+```
+var detector = new AR.Detector('ARUCO');
 ```
 
 Call `detect` function:
@@ -82,7 +59,7 @@ var context = canvas.getContext("2d");
 var imageData = context.getImageData(0, 0, width, height);
 ```
 
-### 3D Pose Estimation ###
+## 3D Pose Estimation
 Create an `POS.Posit` object:
 
 ```
@@ -120,7 +97,3 @@ for (var i = 0; i < corners.length; ++ i){
  * `alternativeTranslation`: Translation vector of the alternative estimated pose.
 
 Note: POS namespace can be taken from posit1.js or posit2.js.
-
-### Flash Demo (deprecated) ###
-
-It uses [Flashcam](https://github.com/jcmellado/flashcam), a minimal Flash library to capture video.
