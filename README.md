@@ -4,6 +4,7 @@
 
 [ArUco](http://www.uco.es/investiga/grupos/ava/node/26) is a minimal library for Augmented Reality applications based on OpenCv.
 
+
 ## Demos
 
 100% JavaScript (see details bellow):
@@ -21,7 +22,7 @@
 A square grid with an external unused black border. Internal cells contains id information.
 
 The markes are recognized using the dictionary specified. The library currently support the following dictionaries:
-- ARUCO: 6x6 Marker with 25 bit information, minimum hamming distance between any two codes = 1 and 1024 codes.
+- ARUCO: 7x7 Marker with 25 bit information, minimum hamming distance between any two codes = 1 and 1024 codes.
 - [ARUCO_MIP_36h12](https://sourceforge.net/projects/aruco/files/aruco_mip_36h12_dict.zip/download): 8x8 Marker with 36 bit information, minimum hamming distance between any two codes = 12 and 250 codes.
 
 The library can be anyway easily adapted to work with any other ArUco dictionary for square markers. 
