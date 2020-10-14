@@ -80,23 +80,26 @@ AR.Dictionary.prototype.find = function (bits) {
       val += bitRow[j];
     }
   }
-  var found = this.codes[val];
-  if (found)
+  var minFound = this.codes[val];
+  if (minFound)
     return {
-      id: found.id,
+      id: minFound.id,
       distance: 0
     };
-
+  
   for (i = 0; i < this.codeList.length; i++) {
     var code = this.codeList[i];
     var distance = this._hammingDistance(val, code);
-    if (this._hammingDistance(val, code) <= this.tau)
-      return {
-        id: this.codes[code].id,
-        distance: distance
-      };
+    if (this._hammingDistance(val, code) < this.tau) {
+      if (!minFound || minFound.distance > distance) {
+        minFound = {
+          id: this.codes[code].id,
+          distance: distance
+        };
+      }
+    }
   }
-  return null;
+  return minFound;
 };
 
 AR.Dictionary.prototype._hex2bin = function (hex, nBits) {
@@ -114,9 +117,10 @@ AR.Dictionary.prototype._hammingDistance = function (str1, str2) {
   return distance;
 };
 
-AR.Marker = function(id, corners){
+AR.Marker = function(id, corners, hammingDistance){
   this.id = id;
   this.corners = corners;
+  this.hammingDistance = hammingDistance;
 };
 
 AR.Detector = function(dictionaryName){
@@ -132,7 +136,9 @@ AR.Detector = function(dictionaryName){
   this.dictionary = new AR.Dictionary(dictionaryName);
 };
 
-AR.Detector.prototype.detect = function(image){
+AR.Detector.prototype.detect = function(image, maxHammingDistance){
+  if (maxHammingDistance != null)
+    this.dictionary.tau = maxHammingDistance;
   CV.grayscale(image, this.grey);
   CV.adaptiveThreshold(this.grey, this.thres, 2, 7);
   
@@ -288,7 +294,7 @@ AR.Detector.prototype.getMarker = function(imageSrc, candidate){
   }
 
   if (foundMin)
-    return new AR.Marker(foundMin.id, this.rotate2(candidate, rot));
+    return new AR.Marker(foundMin.id, this.rotate2(candidate, rot), foundMin.distance);
 
   return null;
 };
