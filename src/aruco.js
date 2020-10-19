@@ -29,7 +29,9 @@ References:
   https://github.com/jcmellado/js-aruco
 */
 
-var AR = AR || {};
+var AR = {};
+var CV = this.CV || require('./cv').CV;
+this.AR = AR;
 
 AR.DICTIONARIES = {
   ARUCO: {
@@ -86,7 +88,7 @@ AR.Dictionary.prototype.find = function (bits) {
       id: minFound.id,
       distance: 0
     };
-  
+
   for (i = 0; i < this.codeList.length; i++) {
     var code = this.codeList[i];
     var distance = this._hammingDistance(val, code);
@@ -123,7 +125,8 @@ AR.Marker = function(id, corners, hammingDistance){
   this.hammingDistance = hammingDistance;
 };
 
-AR.Detector = function(dictionaryName){
+AR.Detector = function(config){
+  config = config || {};
   this.grey = new CV.Image();
   this.thres = new CV.Image();
   this.homography = new CV.Image();
@@ -131,17 +134,52 @@ AR.Detector = function(dictionaryName){
   this.contours = [];
   this.polys = [];
   this.candidates = [];
-  if (!dictionaryName)
-    dictionaryName = 'ARUCO_MIP_36h12';
-  this.dictionary = new AR.Dictionary(dictionaryName);
+  config.dictionaryName = config.dictionaryName || 'ARUCO_MIP_36h12';
+  this.dictionary = new AR.Dictionary(config.dictionaryName);
+  this.dictionary.tau = config.maxHammingDistance != null ? config.maxHammingDistance : this.dictionary.tau;
 };
 
-AR.Detector.prototype.detect = function(image, maxHammingDistance){
-  if (maxHammingDistance != null)
-    this.dictionary.tau = maxHammingDistance;
+AR.Detector.prototype.detectImage = function (width, height, data) {
+  return this.detect({
+    width: width,
+    height: height,
+    data: data
+  });
+};
+
+AR.Detector.prototype.detectStreamInit = function (width, height, callback) {
+  this.streamConfig = {};
+  this.streamConfig.width = width;
+  this.streamConfig.height = height;
+  this.streamConfig.imageSize = width * height * 4; //provided image must be a sequence of rgba bytes (4 bytes represent a pixel)
+  this.streamConfig.index = 0;
+  this.streamConfig.imageData = new Uint8ClampedArray(this.streamConfig.imageSize);
+  this.streamConfig.callback = callback || function (image, markerList) {};
+};
+
+//accept data chunks of different sizes
+AR.Detector.prototype.detectStream = function (data) {
+  for (var i = 0; i < data.length; i++) {
+    this.streamConfig.imageData[this.streamConfig.index % this.streamConfig.imageSize] = data[i];
+
+    this.streamConfig.index++;
+    if (this.streamConfig.index - 1 == this.streamConfig.imageSize) {
+      this.streamConfig.index = 0;
+      var image = {
+        width: this.streamConfig.width,
+        height: this.streamConfig.height,
+        data: this.streamConfig.imageData
+      };
+      var markerList = this.detect(image);
+      this.streamConfig.callback(image, markerList);
+    }
+  }
+};
+
+AR.Detector.prototype.detect = function(image){
   CV.grayscale(image, this.grey);
   CV.adaptiveThreshold(this.grey, this.thres, 2, 7);
-  
+
   this.contours = CV.findContours(this.thres, this.binary);
   //Scale Fix: https://stackoverflow.com/questions/35936397/marker-detection-on-paper-sheet-using-javascript
   //this.candidates = this.findCandidates(this.contours, image.width * 0.20, 0.05, 10);
@@ -156,7 +194,7 @@ AR.Detector.prototype.findCandidates = function(contours, minSize, epsilon, minL
   var candidates = [], len = contours.length, contour, poly, i;
 
   this.polys = [];
-  
+
   for (i = 0; i < len; ++ i){
     contour = contours[i];
 
@@ -200,19 +238,19 @@ AR.Detector.prototype.notTooNear = function(candidates, minDist){
   var notTooNear = [], len = candidates.length, dist, dx, dy, i, j, k;
 
   for (i = 0; i < len; ++ i){
-  
+
     for (j = i + 1; j < len; ++ j){
       dist = 0;
-      
+
       for (k = 0; k < 4; ++ k){
         dx = candidates[i][k].x - candidates[j][k].x;
         dy = candidates[i][k].y - candidates[j][k].y;
-      
+
         dist += dx * dx + dy * dy;
       }
-      
+
       if ( (dist / 4) < (minDist * minDist) ){
-      
+
         if ( CV.perimeter( candidates[i] ) < CV.perimeter( candidates[j] ) ){
           candidates[i].tooNear = true;
         }else{
@@ -238,7 +276,7 @@ AR.Detector.prototype.findMarkers = function(imageSrc, candidates, warpSize){
     candidate = candidates[i];
 
     CV.warp(imageSrc, this.homography, candidate, warpSize);
-  
+
     CV.threshold(this.homography, this.homography, CV.otsu(this.homography) );
 
     marker = this.getMarker(this.homography, candidate);
@@ -246,7 +284,7 @@ AR.Detector.prototype.findMarkers = function(imageSrc, candidates, warpSize){
       markers.push(marker);
     }
   }
-  
+
   return markers;
 };
 
@@ -254,12 +292,12 @@ AR.Detector.prototype.getMarker = function(imageSrc, candidate){
   var markSize = this.dictionary.markSize;
   var width = (imageSrc.width / markSize) >>> 0,
       minZero = (width * width) >> 1,
-      bits = [], rotations = [], 
+      bits = [], rotations = [],
       square, inc, i, j;
 
   for (i = 0; i < markSize; ++i) {
     inc = (0 === i || (markSize - 1) === i) ? 1 : (markSize - 1);
-    
+
     for (j = 0; j < markSize; j += inc) {
       square = {x: j * width, y: i * width, width: width, height: width};
       if ( CV.countNonZero(imageSrc, square) > minZero){
@@ -273,7 +311,7 @@ AR.Detector.prototype.getMarker = function(imageSrc, candidate){
 
     for (j = 0; j < markSize-2; ++j) {
       square = {x: (j + 1) * width, y: (i + 1) * width, width: width, height: width};
-      
+
       bits[i][j] = CV.countNonZero(imageSrc, square) > minZero? 1: 0;
     }
   }
@@ -301,7 +339,7 @@ AR.Detector.prototype.getMarker = function(imageSrc, candidate){
 
 AR.Detector.prototype.rotate = function(src){
   var dst = [], len = src.length, i, j;
-  
+
   for (i = 0; i < len; ++ i){
     dst[i] = [];
     for (j = 0; j < src[i].length; ++ j){
@@ -314,7 +352,7 @@ AR.Detector.prototype.rotate = function(src){
 
 AR.Detector.prototype.rotate2 = function(src, rotation){
   var dst = [], len = src.length, i;
-  
+
   for (i = 0; i < len; ++ i){
     dst[i] = src[ (rotation + i) % len ];
   }
