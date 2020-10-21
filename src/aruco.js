@@ -160,10 +160,10 @@ AR.Detector.prototype.detectStreamInit = function (width, height, callback) {
 //accept data chunks of different sizes
 AR.Detector.prototype.detectStream = function (data) {
   for (var i = 0; i < data.length; i++) {
-    this.streamConfig.imageData[this.streamConfig.index % this.streamConfig.imageSize] = data[i];
+    this.streamConfig.imageData[this.streamConfig.index] = data[i];
 
     this.streamConfig.index++;
-    if (this.streamConfig.index - 1 == this.streamConfig.imageSize) {
+    if (this.streamConfig.index - 1 == this.streamConfig.imageSize -1) {
       this.streamConfig.index = 0;
       var image = {
         width: this.streamConfig.width,
