@@ -102,6 +102,28 @@ detector.detectStream(data);
 An example of server side detection in NodeJS using stream data from FFMPEG stream is available in the [samples/node-js-server](./samples/node-js-server) folder.
 
 
+## Creation of Custom Dictionaries
+Custom dictionaries can be added to the library editing the AR.DICTIONARIES before the instansiation of the ArUco Detector:
+
+```
+//example of custom dictionary
+AR.DICTIONARIES.MyDictionary = {
+  nBits: 25,
+  tau: 1,
+  codeList: ['0x1084210UL', '0x1084217UL', ...]
+};
+```
+`nBits` must contain the bit dimentsion of the markers in your dictionary.
+`tau` can contain the hamming distance of the codes in your dictionary (optional).
+`codeList` must be an array of strings containing the hexadecimal representation of every marker in your dictionary. The order is important becasue represent the marker id.
+
+The defined dictionary is then available to the detector:
+
+```
+var detector = new AR.Detector('MyDictionary');
+```
+
+
 ## 3D Pose Estimation
 Create an `POS.Posit` object:
 
