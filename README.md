@@ -36,8 +36,21 @@ var detector = new AR.Detector();
 Create an `AR.Detector` object using a specific dictionary (Currently available dictionaries are 'ARUCO' and 'ARUCO_MIP_36h12'):
 
 ```
-var detector = new AR.Detector('ARUCO');
+var detector = new AR.Detector({
+  dictionaryName: 'ARUCO'
+});
 ```
+
+Additionally is possible to specify a custom hamming distance for the specified dictionary:
+
+```
+var detector = new AR.Detector({
+  dictionaryName: 'ARUCO_MIP_36h12',
+  maxHammingDistance: 5
+});
+```
+
+In the previous sample the default maximum allowed hamming distance of the dictionary ARUCO_MIP_36h12 (that is 12), is replaced with 5. Doing so will be identified only markers with a detection error below 5, making the detection more reliable in case of high resolution images (at the cost of skipping possible relevant markers in low resolution images).
 
 ### Markers detection on Canvas images
 Call `detect` function with imageData parameter:
@@ -120,7 +133,9 @@ AR.DICTIONARIES.MyDictionary = {
 The defined dictionary is then available to the detector:
 
 ```
-var detector = new AR.Detector('MyDictionary');
+var detector = new AR.Detector({
+  dictionaryName: 'MyDictionary'
+});
 ```
 
 
