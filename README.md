@@ -39,7 +39,8 @@ Create an `AR.Detector` object using a specific dictionary (Currently available 
 var detector = new AR.Detector('ARUCO');
 ```
 
-Call `detect` function:
+### Markers detection on Canvas images
+Call `detect` function with imageData parameter:
 
 ```
 var markers = detector.detect(imageData);
@@ -61,6 +62,45 @@ var context = canvas.getContext("2d");
 
 var imageData = context.getImageData(0, 0, width, height);
 ```
+
+### Markers detection on RGBA Raw images
+Call `detect` function with width, height and data parameters:
+
+```
+var markers = detector.detect(width, height, data);
+```
+`width` and `height` must be integer numbers representing the image size.
+`data` must be an 8-bit unsigned `ArrayBuffer` (eg. `Uint8ClampedArray`) containing the sequence of RGBA image bytes (R, G, B, A, R, G, B, A, R, G, B, A, ....).
+
+
+### Markers detection on RGBA video stream
+Initialize the stream detection calling the `detectStreamInit` function with width, height and callback parameters:
+
+```
+detector.detectStreamInit(width, height, callback);
+```
+`width` and `height` must be integer numbers representing the size of video image.
+`callback` must be a function that accept two parameters: the first is the image processed and the second the markers list detected
+
+```
+var callback = function (image, markerList) {
+  console.log(markerList);
+};
+```
+
+The callback function will be called every time an image in the video stream is processed, providing the markers detection results.
+
+After this initialization phase, the function detectStream must be called every time a video chunk is available (the function accept chunks of every size):
+
+```
+detector.detectStream(data);
+```
+`callback` must be an 8-bit unsigned `ArrayBuffer` (eg. `Uint8ClampedArray`) containing a video chunk as sequence of RGBA image bytes (R, G, B, A, R, G, B, A, R, G, B, A, ....). 
+
+
+## Markers Detection in NodeJS 
+An example of server side detection in NodeJS using stream data from FFMPEG stream is available in the [samples/node-js-server](./samples/node-js-server) folder.
+
 
 ## 3D Pose Estimation
 Create an `POS.Posit` object:
