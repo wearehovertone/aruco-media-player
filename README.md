@@ -113,9 +113,9 @@ AR.DICTIONARIES.MyDictionary = {
   codeList: ['0x1084210UL', '0x1084217UL', ...]
 };
 ```
-`nBits` must contain the bit dimentsion of the markers in your dictionary.
+`nBits` must contain the bit dimension of the markers in your dictionary.
 `tau` can contain the hamming distance of the codes in your dictionary (optional).
-`codeList` must be an array of strings containing the hexadecimal representation of every marker in your dictionary. The order is important becasue represent the marker id.
+`codeList` must be an array of strings containing the hexadecimal representation of every marker in your dictionary. The order is important because represent the marker id.
 
 The defined dictionary is then available to the detector:
 
