@@ -51,7 +51,9 @@
         }
       );
         
-      detector = new AR.Detector('ARUCO');
+      detector = new AR.Detector({
+        dictionaryName: 'ARUCO'
+      });
 
       requestAnimationFrame(tick);
     }
