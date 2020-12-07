@@ -108,7 +108,7 @@ After this initialization phase, the function detectStream must be called every 
 ```
 detector.detectStream(data);
 ```
-`callback` must be an 8-bit unsigned `ArrayBuffer` (eg. `Uint8ClampedArray`) containing a video chunk as sequence of RGBA image bytes (R, G, B, A, R, G, B, A, R, G, B, A, ....). 
+`data` must be an 8-bit unsigned `ArrayBuffer` (eg. `Uint8ClampedArray`) containing a video chunk as sequence of RGBA image bytes (R, G, B, A, R, G, B, A, R, G, B, A, ....). 
 
 
 ## Markers Detection in NodeJS 
@@ -116,7 +116,7 @@ An example of server side detection in NodeJS using stream data from FFMPEG stre
 
 
 ## Creation of Custom Dictionaries
-Custom dictionaries can be added to the library editing the AR.DICTIONARIES before the instansiation of the ArUco Detector:
+Custom dictionaries can be added to the library, editing the AR.DICTIONARIES before the instansiation of the ArUco Detector:
 
 ```
 //example of custom dictionary
