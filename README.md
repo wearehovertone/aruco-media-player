@@ -179,4 +179,4 @@ for (var i = 0; i < corners.length; ++ i){
 Note: POS namespace can be taken from posit1.js or posit2.js.
 
 ## Support Me <3
-[![Buy me a coffee]((https://user-images.githubusercontent.com/8982949/109154198-40129680-776e-11eb-8015-67da5a4c78d1.png)](https://www.paypal.me/damianofalcioni/0.99)
+[![Buy me a coffee](https://user-images.githubusercontent.com/8982949/109154198-40129680-776e-11eb-8015-67da5a4c78d1.png)](https://www.paypal.me/damianofalcioni/0.99)
