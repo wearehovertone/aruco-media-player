@@ -17,7 +17,7 @@
 
 - [3D Earth (ARUCO_MIP_36h12 Dictionary)!](https://damianofalcioni.github.io/js-aruco2/samples/debug-posit/debug-posit.html)
 
-- [Markers Creator](https://damianofalcioni.github.io/js-aruco2/samples/marker-creator/marker-creator.html)
+- [Markers Creator](https://damianofalcioni.github.io/js-aruco2/samples/marker-creator/marker-creator.html?)
 
 ## Markers 
 
