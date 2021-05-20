@@ -125,12 +125,14 @@ AR.Dictionary.prototype.generateSVG = function (id) {
   var code = this.codeList[id];
   if (code == null)
     throw 'The id "' + id + '" is not valid for the dictionary "' + this.dicName + '". ID must be between 0 and ' + (this.codeList.length-1) + ' included.';
-  var size = this.markSize;
-  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ (size+2) + ' ' + (size+2) + '">';
-  for(var x=0;x<size;x++) {
-    for(var y=0;y<size;y++) {
-      if (x==0 || x==size-1 || y==0 || y==size-1 || code[((y-1)*(size-2))+(x-1)]=='0') 
-        svg += '<rect x="' + (x+1) + '" y="' + (y+1) + '" width="1" height="1" fill="black"/>';
+  var size = this.markSize - 2;
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ (size+4) + ' ' + (size+4) + '">';
+  svg += '<rect x="0" y="0" width="' + (size+4) + '" height="' + (size+4) + '" fill="white"/>';
+  svg += '<rect x="1" y="1" width="' + (size+2) + '" height="' + (size+2) + '" fill="black"/>';
+  for(var y=0;y<size;y++) {
+    for(var x=0;x<size;x++) {
+      if (code[y*size+x]=='1') 
+        svg += '<rect x="' + (x+2) + '" y="' + (y+2) + '" width="1" height="1" fill="white"/>';
     }
   }
   svg += '</svg>';
