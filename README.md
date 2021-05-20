@@ -17,13 +17,15 @@
 
 - [3D Earth (ARUCO_MIP_36h12 Dictionary)!](https://damianofalcioni.github.io/js-aruco2/samples/debug-posit/debug-posit.html)
 
+- [Markers Creator](https://damianofalcioni.github.io/js-aruco2/samples/marker-creator/marker-creator.html)
+
 ## Markers 
 
 A square grid with an external unused black border. Internal cells contains id information.
 
 The markes are recognized using the dictionary specified. The library currently support the following dictionaries:
-- ARUCO: 7x7 Marker with 25 bit information, minimum hamming distance between any two codes = 1 and 1024 codes.
-- [ARUCO_MIP_36h12](https://sourceforge.net/projects/aruco/files/aruco_mip_36h12_dict.zip/download): 8x8 Marker with 36 bit information, minimum hamming distance between any two codes = 12 and 250 codes.
+- ARUCO: 7x7 Marker with 25 bit information, minimum hamming distance between any two codes = 1 and 1024 codes. [Create ARUCO Markers](https://damianofalcioni.github.io/js-aruco2/samples/marker-creator/marker-creator.html?dictionary=ARUCO).
+- [ARUCO_MIP_36h12](https://sourceforge.net/projects/aruco/files/aruco_mip_36h12_dict.zip/download): 8x8 Marker with 36 bit information, minimum hamming distance between any two codes = 12 and 250 codes. [Create ARUCO_MIP_36h12 Markers](https://damianofalcioni.github.io/js-aruco2/samples/marker-creator/marker-creator.html?dictionary=ARUCO_MIP_36h12).
 
 The library can be anyway easily adapted to work with any other ArUco dictionary for square markers. 
 
@@ -138,6 +140,13 @@ var detector = new AR.Detector({
 });
 ```
 
+## Creation of Marker SVG image
+Create a `AR.Dictionary` object providing as parameter the dictionary name to use (currently available dictionaries are 'ARUCO' and 'ARUCO_MIP_36h12') and then call the function `generateSVG` providing as parameter the id to generate (that is a number between 0 and the (size-1) of the `codeList` in the specified dictionary):
+```
+var dictionary = new AR.Dictionary('ARUCO');
+var SVG = dictionary.generateSVG(0);
+```
+A [sample page](https://damianofalcioni.github.io/js-aruco2/samples/marker-creator/marker-creator.html) is available to show this feature.
 
 ## 3D Pose Estimation
 Create an `POS.Posit` object:

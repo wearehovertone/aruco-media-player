@@ -59,6 +59,7 @@ AR.Dictionary.prototype._initialize = function (dicName) {
   this.tau = 0;
   this.nBits = 0;
   this.markSize = 0;
+  this.dicName = dicName;
   var dictionary = AR.DICTIONARIES[dicName];
   if (!dictionary)
     throw 'The dictionary "' + dicName + '" is not recognized.';
@@ -118,6 +119,22 @@ AR.Dictionary.prototype._hammingDistance = function (str1, str2) {
     if (str1[i] !== str2[i])
       distance += 1;
   return distance;
+};
+
+AR.Dictionary.prototype.generateSVG = function (id) {
+  var code = this.codeList[id];
+  if (code == null)
+    throw 'The id "' + id + '" is not valid for the dictionary "' + this.dicName + '". ID must be between 0 and ' + (this.codeList.length-1) + ' included.';
+  var size = this.markSize;
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ (size+2) + ' ' + (size+2) + '">';
+  for(var x=0;x<size;x++) {
+    for(var y=0;y<size;y++) {
+      if (x==0 || x==size-1 || y==0 || y==size-1 || code[((y-1)*(size-2))+(x-1)]=='0') 
+        svg += '<rect x="' + (x+1) + '" y="' + (y+1) + '" width="1" height="1" fill="black"/>';
+    }
+  }
+  svg += '</svg>';
+  return svg;
 };
 
 AR.Marker = function (id, corners, hammingDistance) {
