@@ -21,6 +21,7 @@ svg {
     <table>
       <tr><td>Dictionary: </td><td><select id="dictionarySelect"></td></tr>
       <tr><td>Code ID: </td><td><input type="number" id="idInput" min="0"> <span id="maxIDSpan"></span></td></tr>
+      <tr><td><input type="button" id="downloadBtn" value="Download"></td><td></td></tr>
     </table>
     <div id="markerSVG"></div>
     <div style="margin: 15px;"><strong>Powered by <a href="https://damianofalcioni.github.io/js-aruco2/">js-aruco2</a></strong></div>
@@ -30,6 +31,7 @@ svg {
     var dictionarySelect = document.getElementById("dictionarySelect");
     var idInput = document.getElementById("idInput");
     var maxIDSpan = document.getElementById("maxIDSpan");
+    var downloadBtn = document.getElementById("downloadBtn");
     var dictionary = null;
 
     var urlParams = new URLSearchParams(window.location.search);
@@ -59,6 +61,10 @@ svg {
       }
     });
 
+    downloadBtn.addEventListener('click', function () {
+      download(markerSVG.innerHTML, dictionarySelect.value + '_ID' + idInput.value + '.svg', 'image/svg');
+    });
+
     dictionarySelect.innerHTML = '';
     Object.keys(AR.DICTIONARIES).forEach(function (dictionaryName) {
       var option = document.createElement("option");
@@ -72,6 +78,26 @@ svg {
         throw 'The dictionary "'+dictionaryParam+'" is invalid';
     }
     dictionarySelect.dispatchEvent(new Event("change"));
+
+    var download = function (data, filename, type) {
+      var file = new Blob([data], {
+        type: type
+      });
+      if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+      else { // Others
+        var a = document.createElement("a"),
+          url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 0);
+      }
+    };
   </script>
 </body>
   
