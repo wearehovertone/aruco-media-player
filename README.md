@@ -1,8 +1,8 @@
 # JS-ARUCO2
 
-**js-aruco2** is a fork of [js-aruco](https://github.com/jcmellado/js-aruco) that support also the ARUCO_MIP_36h12 dictionary and adaptable to use any other ArUco or custom dictionary.
+**js-aruco2** is a fork of [js-aruco](https://github.com/jcmellado/js-aruco) that supports also the ARUCO_MIP_36h12 dictionary and adaptable to use any other ArUco or custom dictionary. Additionally, this library is ready to be used in NodeJS to recognize markers from FFMPEG video streams and allows to generate markers in SVG format.
 
-[ArUco](http://www.uco.es/investiga/grupos/ava/node/26) is a minimal library for Augmented Reality applications based on OpenCv.
+**js-aruco2** is a pure Javascript implementation of [ArUco](http://www.uco.es/investiga/grupos/ava/node/26), a minimal library for Augmented Reality applications based on OpenCv.
 
 
 ## Demos
@@ -35,7 +35,7 @@ Create an `AR.Detector` object using default ARUCO_MIP_36h12 dictionary:
 ```
 var detector = new AR.Detector();
 ```
-Create an `AR.Detector` object using a specific dictionary (Currently available dictionaries are 'ARUCO' and 'ARUCO_MIP_36h12'):
+Create an `AR.Detector` object using a specific dictionary (currently available dictionaries are 'ARUCO' and 'ARUCO_MIP_36h12'):
 
 ```
 var detector = new AR.Detector({
@@ -43,7 +43,7 @@ var detector = new AR.Detector({
 });
 ```
 
-Additionally is possible to specify a custom hamming distance for the specified dictionary:
+Additionally, is possible to specify a custom hamming distance for the specified dictionary:
 
 ```
 var detector = new AR.Detector({
@@ -52,7 +52,7 @@ var detector = new AR.Detector({
 });
 ```
 
-In the previous sample the default maximum allowed hamming distance of the dictionary ARUCO_MIP_36h12 (that is 12), is replaced with 5. Doing so will be identified only markers with a detection error below 5, making the detection more reliable in case of high resolution images (at the cost of skipping possible relevant markers in low resolution images).
+In the previous sample, the default maximum allowed hamming distance of the dictionary ARUCO_MIP_36h12 (that is 12) is replaced with 5. Doing so will be identified only markers with a detection error below 5, making the detection more reliable in case of high resolution images, at the cost of skipping possible relevant markers in low resolution images.
 
 ### Markers detection on Canvas images
 Call `detect` function with imageData parameter:
@@ -130,7 +130,7 @@ AR.DICTIONARIES.MyDictionary = {
 ```
 `nBits` must contain the bit dimension of the markers in your dictionary.
 `tau` can contain the hamming distance of the codes in your dictionary (optional).
-`codeList` must be an array of strings containing the hexadecimal representation of every marker in your dictionary. The order is important because represent the marker id.
+`codeList` must be an array of strings containing the hexadecimal representation of every marker in your dictionary. The order is important because the position in the array represents the marker id.
 
 The defined dictionary is then available to the detector:
 
@@ -141,7 +141,7 @@ var detector = new AR.Detector({
 ```
 
 ## Creation of Marker SVG image
-Create a `AR.Dictionary` object providing as parameter the dictionary name to use (currently available dictionaries are 'ARUCO' and 'ARUCO_MIP_36h12') and then call the function `generateSVG` providing as parameter the id to generate (that is a number between 0 and the (size-1) of the `codeList` in the specified dictionary):
+Create a `AR.Dictionary` object providing as parameter the dictionary name to use (currently available dictionaries are 'ARUCO' and 'ARUCO_MIP_36h12') and then call the function `generateSVG` providing as parameter the id to generate (that is a number between 0 and the size-1 of the `codeList` array in the specified dictionary):
 ```
 var dictionary = new AR.Dictionary('ARUCO');
 var SVG = dictionary.generateSVG(0);
