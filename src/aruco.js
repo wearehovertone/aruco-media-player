@@ -379,7 +379,7 @@ AR.Detector.prototype.getMarker = function (imageSrc, candidate) {
   }
 
   if (foundMin)
-    return new AR.Marker(foundMin.id, this.rotate2(candidate, rot), foundMin.distance);
+    return new AR.Marker(foundMin.id, this.rotate2(candidate, 4 - rot), foundMin.distance);
 
   return null;
 };
