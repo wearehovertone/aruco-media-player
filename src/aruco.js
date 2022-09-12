@@ -223,6 +223,44 @@ AR.Detector.prototype.detectStream = function (data) {
   }
 };
 
+AR.Detector.prototype.detectMJPEGStreamInit = function (width, height, callback, decoderFn) {
+  this.mjpeg = {
+    decoderFn: decoderFn,
+    chunks: [],
+    SOI: [0xff, 0xd8],
+    EOI: [0xff, 0xd9]
+  };
+  this.detectStreamInit(width, height, callback);
+};
+
+AR.Detector.prototype.detectMJPEGStream = function (chunk) {
+  var eoiPos = chunk.findIndex(function (element, index, array) {
+    return this.mjpeg.EOI[0] == element && array.length > index + 1 && this.mjpeg.EOI[1] == array[index + 1];
+  });
+  var soiPos = chunk.findIndex(function (element, index, array) {
+    return this.mjpeg.SOI[0] == element && array.length > index + 1 && this.mjpeg.SOI[1] == array[index + 1];
+  });
+
+  if (eoiPos === -1) {
+    this.mjpeg.chunks.push(chunk);
+  } else {
+    var part1 = chunk.slice(0, eoiPos + 2);
+    if (part1.length) {
+      this.mjpeg.chunks.push(part1);
+    }
+    if (this.mjpeg.chunks.length) {
+      var jpegImage = this.mjpeg.chunks.flat();
+      var rgba = this.mjpeg.decoderFn(jpegImage);
+      this.detectStream(rgba);
+    }
+    this.mjpeg.chunks = [];
+  }
+  if (soiPos > -1) {
+    this.mjpeg.chunks = [];
+    this.mjpeg.chunks.push(chunk.slice(soiPos));
+  }
+};
+
 AR.Detector.prototype.detect = function (image) {
   CV.grayscale(image, this.grey);
   CV.adaptiveThreshold(this.grey, this.thres, 2, 7);
