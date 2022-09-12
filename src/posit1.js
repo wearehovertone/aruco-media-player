@@ -28,6 +28,9 @@ References:
 */
 
 var POS = POS || {};
+this.POS = POS;
+
+var SVD = this.SVD || require('./svd').SVD;
 
 POS.Posit = function(modelSize, focalLength){
   this.objectPoints = this.buildModel(modelSize);

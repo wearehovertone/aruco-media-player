@@ -27,6 +27,7 @@ References:
 */
 
 var SVD = SVD || {};
+this.SVD = SVD;
 
 SVD.svdcmp = function(a, m, n, w, v){
   var flag, i, its, j, jj, k, l, nm,
