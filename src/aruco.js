@@ -67,7 +67,17 @@ AR.Dictionary.prototype._initialize = function (dicName) {
   this.nBits = dictionary.nBits;
   this.markSize = Math.sqrt(dictionary.nBits) + 2;
   for (var i = 0; i < dictionary.codeList.length; i++) {
-    var code = this._hex2bin(dictionary.codeList[i], dictionary.nBits);
+    var code = null;
+    if (typeof dictionary.codeList[i] === 'number')
+      code = this._hex2bin(dictionary.codeList[i], dictionary.nBits);
+    if (typeof dictionary.codeList[i] === 'string')
+      code = this._hex2bin(parseInt(dictionary.codeList[i], 16), dictionary.nBits);
+    if (Array.isArray(dictionary.codeList[i])) 
+      code = this._bytes2bin(dictionary.codeList[i], dictionary.nBits);
+    if (code === null) 
+      throw 'Invalid code ' + i + ' in dictionary ' + dicName + ': ' + JSON.stringify(dictionary.codeList[i]);
+    if (code.length != dictionary.nBits)
+      throw 'The code ' + i + ' in dictionary ' + dicName + ' is not ' +  dictionary.nBits + ' bits long but ' + code.length + ': ' + code;
     this.codeList.push(code);
     this.codes[code] = {
       id: i
@@ -108,7 +118,15 @@ AR.Dictionary.prototype.find = function (bits) {
 };
 
 AR.Dictionary.prototype._hex2bin = function (hex, nBits) {
-  return parseInt(hex, 16).toString(2).padStart(nBits, '0');
+  return hex.toString(2).padStart(nBits, '0');
+};
+
+AR.Dictionary.prototype._bytes2bin = function (byteList, nBits) {
+  var bits = '', byte;
+  for (byte of byteList) {
+    bits += byte.toString(2).padStart(bits.length + 8 > nBits?nBits - bits.length:8, '0');
+  }
+  return bits;
 };
 
 AR.Dictionary.prototype._hammingDistance = function (str1, str2) {
