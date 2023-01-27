@@ -1,6 +1,6 @@
 # JS-ARUCO2
 
-**js-aruco2** is a fork of [js-aruco](https://github.com/jcmellado/js-aruco) that supports also the ARUCO_MIP_36h12 dictionary and adaptable to use any other ArUco or custom dictionary. Additionally, this library is ready to be used in NodeJS to recognize markers from FFMPEG video streams and allows to generate markers in SVG format.
+**js-aruco2** is a fork of [js-aruco](https://github.com/jcmellado/js-aruco) that supports also the ARUCO_MIP_36h12 dictionary and any other ArUco or custom dictionary for square markers. Additionally, this library is ready to be used in NodeJS to recognize markers from FFMPEG video streams and allows to generate markers in SVG format.
 
 **js-aruco2** is a pure Javascript implementation of [ArUco](http://www.uco.es/investiga/grupos/ava/node/26), a minimal library for Augmented Reality applications based on OpenCv.
 
@@ -26,6 +26,8 @@ A square grid with an external unused black border. Internal cells contains id i
 The markes are recognized using the dictionary specified. The library currently support the following dictionaries:
 - ARUCO: 7x7 Marker with 25 bit information, minimum hamming distance between any two codes = 3 and 1023 codes. [Create ARUCO Markers](https://damianofalcioni.github.io/js-aruco2/samples/marker-creator/marker-creator.html?dictionary=ARUCO).
 - [ARUCO_MIP_36h12](https://sourceforge.net/projects/aruco/files/aruco_mip_36h12_dict.zip/download): 8x8 Marker with 36 bit information, minimum hamming distance between any two codes = 12 and 250 codes. [Create ARUCO_MIP_36h12 Markers](https://damianofalcioni.github.io/js-aruco2/samples/marker-creator/marker-creator.html?dictionary=ARUCO_MIP_36h12).
+
+Additionals dictionaries are available in the [dictionaries folder](./src/dictionaries/).
 
 The library can be anyway easily adapted to work with any other ArUco dictionary for square markers. 
 
