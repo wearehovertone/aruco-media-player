@@ -7,7 +7,7 @@
 
 ## Demos
 
-100% JavaScript (see details bellow):
+100% client side JavaScript, running in your browser (see details below):
 
 - [Webcam live demo! (ARUCO Dictionary)](https://damianofalcioni.github.io/js-aruco2/samples/getusermedia/getusermedia_ARUCO.html)
 
@@ -37,7 +37,7 @@ Create an `AR.Detector` object using default ARUCO_MIP_36h12 dictionary:
 ```
 var detector = new AR.Detector();
 ```
-Create an `AR.Detector` object using a specific dictionary (currently available dictionaries are 'ARUCO' and 'ARUCO_MIP_36h12'):
+Create an `AR.Detector` object using a specific dictionary (dictionaries available out of the box in the library are 'ARUCO' and 'ARUCO_MIP_36h12'):
 
 ```
 var detector = new AR.Detector({
@@ -54,7 +54,7 @@ var detector = new AR.Detector({
 });
 ```
 
-In the previous sample, the default maximum allowed hamming distance of the dictionary ARUCO_MIP_36h12 (that is 12) is replaced with 5. Doing so will be identified only markers with a detection error below 5, making the detection more reliable in case of high resolution images, at the cost of skipping possible relevant markers in low resolution images.
+In the previous sample, the default maximum allowed hamming distance of the dictionary ARUCO_MIP_36h12 (that is 12) is replaced with 5. Doing so will be identified only markers with a detection error below 5, making the detection more reliable in case of high resolution images, at the cost of skipping possibles relevant markers in low resolution images.
 
 ### Markers detection on Canvas images
 Call `detect` function with imageData parameter:
@@ -178,7 +178,7 @@ for (var i = 0; i < corners.length; ++ i){
 }
 ```
 
-`pose` result will be a `POS.Pose` object with two estimated pose (if any):
+`pose` result will be a `POS.Pose` object with two estimated poses (if any):
 
  * `bestError`: Error of the best estimated pose.
  * `bestRotation`: 3x3 rotation matrix of the best estimated pose.
