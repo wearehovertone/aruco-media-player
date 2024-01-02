@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../aruco-media-player"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "aruco-media-player-git"
+	}
+}
